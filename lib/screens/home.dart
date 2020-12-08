@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,19 +12,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future<Album> futureAlbum;
+  Future<Album> _futureAlbum;
   int index = 1;
 
   @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();
+    setUpTimedFetch();
   }
 
   void reload() {
     setState(() {
       index = index + 1;
-      futureAlbum = fetchAlbum();
+      _futureAlbum = fetchAlbum();
+    });
+  }
+
+  setUpTimedFetch() {
+    Timer.periodic(Duration(milliseconds: 10000), (timer) {
+      setState(() {
+        index = index + 1;
+        _futureAlbum = fetchAlbum();
+      });
     });
   }
 
@@ -59,7 +70,7 @@ class _HomeState extends State<Home> {
 
   FutureBuilder<Album> getFutureBuilder() {
     return FutureBuilder<Album>(
-      future: futureAlbum,
+      future: _futureAlbum,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Text(snapshot.data.title);
