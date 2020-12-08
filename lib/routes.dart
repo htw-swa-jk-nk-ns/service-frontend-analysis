@@ -5,9 +5,11 @@ import 'package:web_app/screens/home.dart';
 const homeRoute = "/";
 const analyseRoute = "/analyse";
 
+/// Used by the MaterialApplication Widget.
+/// Each route represents one accessable page.
 RouteFactory routes() {
   return (settings) {
-    final Map<String, dynamic> arguments = settings.arguments;
+    //final Map<String, dynamic> arguments = settings.arguments;
     Widget screen;
 
     switch (settings.name) {

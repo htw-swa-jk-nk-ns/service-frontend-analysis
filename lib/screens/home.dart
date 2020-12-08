@@ -5,7 +5,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:web_app/json/Album.dart';
+import 'package:web_app/screens/components/bar_chart.dart';
 
+/// Displays the home page of our app.
+/// It is initialized through the Main-Widget.
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -23,6 +26,7 @@ class _HomeState extends State<Home> {
     reload();
   }
 
+  /// Refetches the api endpoint
   void reload() {
     setState(() {
       index = index + 1;
@@ -31,6 +35,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  /// Refetches the api endpoint each 10 seconds
   setUpTimedFetch() {
     Timer.periodic(Duration(milliseconds: 10000), (timer) {
       setState(() {
@@ -40,21 +45,8 @@ class _HomeState extends State<Home> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Voting-Analysis'),
-      ),
-      body: getFutureBuilderAlbums(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => reload(),
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
+  /// Fetches one Album from the api endpoint
+  /// TODO replace with acutal vote class.
   Future<Album> fetchAlbum() async {
     print('https://jsonplaceholder.typicode.com/albums/$index');
     final response =
@@ -71,6 +63,8 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// Fetches a list of albums from the api endpoint
+  /// TODO replace with acutal vote class.
   Future<List<Album>> fetchAlbums() async {
     final response =
         await http.get('https://jsonplaceholder.typicode.com/albums');
@@ -96,6 +90,31 @@ class _HomeState extends State<Home> {
     }
   }
 
+  /// Generates simple bar chart
+  /// TODO generate bar chart based on actual data.
+  SimpleBarChart getBarChart() {
+    return SimpleBarChart.withSampleData();
+  }
+
+  /// Builds the body of our application.
+  Widget getBody(List<Album> albums) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(albums[index].title),
+          SizedBox(
+            child: getBarChart(),
+            width: 500,
+            height: 500,
+          )
+        ],
+      ),
+    );
+  }
+
+  /// Generates a FutureBuilder for one album
+  /// TODO replace with vote class
   FutureBuilder<Album> getFutureBuilderAlbum() {
     return FutureBuilder<Album>(
       future: _futureAlbum,
@@ -111,18 +130,35 @@ class _HomeState extends State<Home> {
     );
   }
 
+  /// Generates a FutureBuilder for a list of albums
+  /// TODO rpelace with vote class
   FutureBuilder<List<Album>> getFutureBuilderAlbums() {
     return FutureBuilder<List<Album>>(
       future: _futureAlbums,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Text(snapshot.data[index].title);
+          return getBody(snapshot.data);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
 
         return CircularProgressIndicator();
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Voting-Analysis'),
+      ),
+      body: getFutureBuilderAlbums(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => reload(),
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

@@ -1,13 +1,9 @@
 class Vote {
-  String country = null;
-
-  String name = null;
-
-  int voteFor = null;
-
-  String date = null;
-
-  int id = null;
+  String country;
+  String name;
+  int voteFor;
+  String date;
+  int id;
 
   Vote();
 
