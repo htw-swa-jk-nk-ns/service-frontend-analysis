@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:web_app/json/Album.dart';
+import 'package:web_app/json/Results.dart';
 import 'package:web_app/screens/components/bar_chart.dart';
 
 /// Displays the home page of our app.
@@ -15,9 +16,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future<Album> _futureAlbum;
-  Future<List<Album>> _futureAlbums;
-  int index = 1;
+  Future<List<Results>> _futureResults;
+  String URL = 'http://localhost:3000/results';
 
   @override
   void initState() {
@@ -29,9 +29,7 @@ class _HomeState extends State<Home> {
   /// Refetches the api endpoint
   void reload() {
     setState(() {
-      index = index + 1;
-      //_futureAlbum = fetchAlbum();
-      _futureAlbums = fetchAlbums();
+      _futureResults = fetchResults();
     });
   }
 
@@ -39,35 +37,14 @@ class _HomeState extends State<Home> {
   setUpTimedFetch() {
     Timer.periodic(Duration(milliseconds: 10000), (timer) {
       setState(() {
-        index = index + 1;
-        _futureAlbum = fetchAlbum();
+        _futureResults = fetchResults();
       });
     });
   }
 
-  /// Fetches one Album from the api endpoint
-  /// TODO replace with acutal vote class.
-  Future<Album> fetchAlbum() async {
-    print('https://jsonplaceholder.typicode.com/albums/$index');
-    final response =
-        await http.get('https://jsonplaceholder.typicode.com/albums/$index');
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Album.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
-
   /// Fetches a list of albums from the api endpoint
-  /// TODO replace with acutal vote class.
-  Future<List<Album>> fetchAlbums() async {
-    final response =
-        await http.get('https://jsonplaceholder.typicode.com/albums');
+  Future<List<Results>> fetchResults() async {
+    final response = await http.get(URL);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -77,12 +54,12 @@ class _HomeState extends State<Home> {
       var list = json.decode(response.body) as List;
 
       // iterate over the list and map each object in list to Img by calling Img.fromJson
-      List<Album> albums = list.map((i) => Album.fromJson(i)).toList();
+      List<Results> results = list.map((i) => Results.fromJson(i)).toList();
 
-      print(albums.runtimeType); //returns List<Img>
-      print(albums[0].runtimeType); //returns Img
+      print(results.runtimeType); //returns List<Img>
+      print(results[0].runtimeType); //returns Img
 
-      return albums;
+      return results;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -91,50 +68,32 @@ class _HomeState extends State<Home> {
   }
 
   /// Generates simple bar chart
-  /// TODO generate bar chart based on actual data.
-  SimpleBarChart getBarChart() {
-    return SimpleBarChart.withSampleData();
+  SimpleBarChart getBarChart(List<Results> results) {
+    return SimpleBarChart.withVoteSummaryData(results);
   }
 
   /// Builds the body of our application.
-  Widget getBody(List<Album> albums) {
+  Widget getBody(List<Results> results) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(albums[index].title),
-          SizedBox(
-            child: getBarChart(),
-            width: 500,
-            height: 500,
+          Text(results[0].candidate),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(100.0),
+              child: getBarChart(results),
+            ),
           )
         ],
       ),
     );
   }
 
-  /// Generates a FutureBuilder for one album
-  /// TODO replace with vote class
-  FutureBuilder<Album> getFutureBuilderAlbum() {
-    return FutureBuilder<Album>(
-      future: _futureAlbum,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data.title);
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        return CircularProgressIndicator();
-      },
-    );
-  }
-
   /// Generates a FutureBuilder for a list of albums
-  /// TODO rpelace with vote class
-  FutureBuilder<List<Album>> getFutureBuilderAlbums() {
-    return FutureBuilder<List<Album>>(
-      future: _futureAlbums,
+  FutureBuilder<List<Results>> getFutureBuilderAlbums() {
+    return FutureBuilder<List<Results>>(
+      future: _futureResults,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return getBody(snapshot.data);
@@ -142,7 +101,7 @@ class _HomeState extends State<Home> {
           return Text("${snapshot.error}");
         }
 
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
     );
   }

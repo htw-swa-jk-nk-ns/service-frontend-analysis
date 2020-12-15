@@ -1,6 +1,7 @@
 /// Bar chart example
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:web_app/json/Results.dart';
 
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -17,8 +18,8 @@ class SimpleBarChart extends StatelessWidget {
     );
   }
 
-  /// Creates a [BarChart] with VoteSummary data and transition.
-  factory SimpleBarChart.withVoteSummaryData(List<VoteSummary> data) {
+  /// Creates a [BarChart] with Results data and transition.
+  factory SimpleBarChart.withVoteSummaryData(List<Results> data) {
     return new SimpleBarChart(
       _createVoteSummaryData(data),
       // Disable animations for image tests.
@@ -55,14 +56,14 @@ class SimpleBarChart extends StatelessWidget {
   }
 
   /// Create one series with VoteSummary data recieved by the ServingLayer.
-  static List<charts.Series<VoteSummary, String>> _createVoteSummaryData(
-      List<VoteSummary> data) {
+  static List<charts.Series<Results, String>> _createVoteSummaryData(
+      List<Results> data) {
     return [
-      new charts.Series<VoteSummary, String>(
+      new charts.Series<Results, String>(
         id: 'Votes',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (VoteSummary sales, _) => sales.vote,
-        measureFn: (VoteSummary sales, _) => sales.count,
+        domainFn: (Results sales, _) => sales.candidate,
+        measureFn: (Results sales, _) => sales.totalVotes,
         data: data,
       )
     ];
