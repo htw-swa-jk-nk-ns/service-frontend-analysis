@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:web_app/json/ResultsByCountry.dart';
 import 'package:web_app/screens/components/pie_chart.dart';
 
+import '../../config.dart';
+
 class CountryBarChart extends StatefulWidget {
   @override
   _CountryBarChartState createState() => _CountryBarChartState();
@@ -13,8 +15,6 @@ class CountryBarChart extends StatefulWidget {
 
 class _CountryBarChartState extends State<CountryBarChart> {
   Future<List<ResultsByCountry>> _futureResultsByCountry;
-
-  String URL_RESULTS_COUNTRY = 'http://localhost:3000/country';
 
   @override
   void initState() {
@@ -70,35 +70,13 @@ class _CountryBarChartState extends State<CountryBarChart> {
     return DonutAutoLabelChart.withResults(results);
   }
 
-  /// Builds the body of our application.
-  Widget getBodyPieChart(List<ResultsByCountry> results) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(results[0].country),
-          Expanded(
-            child: SizedBox(
-              height: 200,
-              width: 200,
-              child: Padding(
-                padding: const EdgeInsets.all(100.0),
-                child: getPieChart(results),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   /// Generates a FutureBuilder for a list of albums
   FutureBuilder<List<ResultsByCountry>> getFutureBuilderPieChart() {
     return FutureBuilder<List<ResultsByCountry>>(
       future: _futureResultsByCountry,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Text(snapshot.data[3].country);
+          return getPieChart(snapshot.data);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }

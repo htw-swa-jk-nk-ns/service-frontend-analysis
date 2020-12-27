@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:web_app/json/Results.dart';
 import 'package:web_app/screens/components/bar_chart.dart';
 
+import '../../config.dart';
+
 class CandidateBarChart extends StatefulWidget {
   @override
   _CandidateBarChartState createState() => _CandidateBarChartState();
@@ -15,7 +17,7 @@ class CandidateBarChart extends StatefulWidget {
 class _CandidateBarChartState extends State<CandidateBarChart> {
   Future<List<Results>> _futureResults;
 
-  String URL_RESULTS = 'http://localhost:3000/results';
+  //String URL_RESULTS = 'http://localhost:3000/results';
 
   @override
   void initState() {
@@ -76,7 +78,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
       future: _futureResults,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Text(snapshot.data[2].candidate);
+          return getBarChart(snapshot.data);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
