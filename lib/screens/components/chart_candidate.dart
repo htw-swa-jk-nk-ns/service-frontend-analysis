@@ -22,8 +22,8 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
   @override
   void initState() {
     super.initState();
-    //setUpTimedFetch();
-    reload();
+    setUpTimedFetch();
+    //reload();
   }
 
   /// Refetches the api endpoint
@@ -35,7 +35,8 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
 
   /// Refetches the api endpoint each 10 seconds
   setUpTimedFetch() {
-    Timer.periodic(Duration(milliseconds: 10000), (timer) {
+    reload();
+    Timer.periodic(Duration(milliseconds: FETCH_INTERFAL), (timer) {
       setState(() {
         _futureResults = fetchResults();
       });
@@ -44,6 +45,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
 
   /// Fetches a list of albums from the api endpoint
   Future<List<Results>> fetchResults() async {
+    print("URL:::$URL_RESULTS");
     final response = await http.get(URL_RESULTS);
 
     if (response.statusCode == 200) {

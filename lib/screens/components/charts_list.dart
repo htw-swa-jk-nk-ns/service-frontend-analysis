@@ -35,7 +35,6 @@ class ChartsListView extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Expanded(
-              ///TODO add chart for candidate
               child: CandidateBarChart(),
             )
           ],
@@ -52,7 +51,6 @@ class ChartsListView extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Expanded(
-              ///TODO add chart for country
               child: CountryBarChart(),
             )
           ],

@@ -19,8 +19,8 @@ class _CountryBarChartState extends State<CountryBarChart> {
   @override
   void initState() {
     super.initState();
-    //setUpTimedFetch();
-    reload();
+    setUpTimedFetch();
+    //reload();
   }
 
   /// Refetches the api endpoint
@@ -32,7 +32,8 @@ class _CountryBarChartState extends State<CountryBarChart> {
 
   /// Refetches the api endpoint each 10 seconds
   setUpTimedFetch() {
-    Timer.periodic(Duration(milliseconds: 10000), (timer) {
+    reload();
+    Timer.periodic(Duration(milliseconds: FETCH_INTERFAL), (timer) {
       setState(() {
         _futureResultsByCountry = fetchResultsByCountry();
       });
@@ -41,6 +42,7 @@ class _CountryBarChartState extends State<CountryBarChart> {
 
   /// Fetches a list of albums from the api endpoint
   Future<List<ResultsByCountry>> fetchResultsByCountry() async {
+    print("COUNTRY_URL:::${URL_RESULTS_COUNTRY}");
     final response = await http.get(URL_RESULTS_COUNTRY);
 
     if (response.statusCode == 200) {
