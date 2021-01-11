@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert';
 
 import 'package:web_app/json/Results.dart';
@@ -16,6 +16,7 @@ class CandidateBarChart extends StatefulWidget {
 
 class _CandidateBarChartState extends State<CandidateBarChart> {
   Future<List<Results>> _futureResults;
+  Client client = http.Client();
 
   //String URL_RESULTS = 'http://localhost:3000/results';
 
@@ -46,7 +47,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
   /// Fetches a list of albums from the api endpoint
   Future<List<Results>> fetchResults() async {
     print("URL:::$URL_RESULTS");
-    final response = await http.get(URL_RESULTS);
+    final response = await client.get(URL_RESULTS);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -57,9 +58,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
 
       // iterate over the list and map each object in list to Img by calling Img.fromJson
       List<Results> results = list.map((i) => Results.fromJson(i)).toList();
-
-      print(results.runtimeType); //returns List<Img>
-      print(results[0].runtimeType); //returns Img
+      print('FETCHED::Candidate successfully');
 
       return results;
     } else {

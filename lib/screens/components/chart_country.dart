@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:web_app/json/ResultsByCountry.dart';
 import 'package:web_app/screens/components/pie_chart.dart';
@@ -15,6 +16,7 @@ class CountryBarChart extends StatefulWidget {
 
 class _CountryBarChartState extends State<CountryBarChart> {
   Future<List<ResultsByCountry>> _futureResultsByCountry;
+  Client client = http.Client();
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _CountryBarChartState extends State<CountryBarChart> {
   /// Fetches a list of albums from the api endpoint
   Future<List<ResultsByCountry>> fetchResultsByCountry() async {
     print("COUNTRY_URL:::${URL_RESULTS_COUNTRY}");
-    final response = await http.get(URL_RESULTS_COUNTRY);
+    final response = await client.get(URL_RESULTS_COUNTRY);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -56,8 +58,7 @@ class _CountryBarChartState extends State<CountryBarChart> {
       List<ResultsByCountry> results =
           list.map((i) => ResultsByCountry.fromJson(i)).toList();
 
-      //print(results.runtimeType); //returns List<Img>
-      print(results[0].runtimeType); //returns Img
+      print('FETCHED::Country successfully');
 
       return results;
     } else {
