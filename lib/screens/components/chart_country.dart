@@ -26,11 +26,7 @@ class _CountryBarChartState extends State<CountryBarChart> {
   /// Refetches the api endpoint
   void reload() {
     setState(() {
-      try {
-        _futureResultsByCountry = fetchResultsByCountry();
-      } catch (error) {
-        print('Error while fetching country data');
-      }
+      _futureResultsByCountry = fetchResultsByCountry();
     });
   }
 

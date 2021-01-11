@@ -38,11 +38,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
     reload();
     Timer.periodic(Duration(milliseconds: FETCH_INTERFAL), (timer) {
       setState(() {
-        try {
-          _futureResults = fetchResults();
-        } catch (error) {
-          print('Error while fetching data');
-        }
+        _futureResults = fetchResults();
       });
     });
   }
