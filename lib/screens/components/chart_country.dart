@@ -26,7 +26,11 @@ class _CountryBarChartState extends State<CountryBarChart> {
   /// Refetches the api endpoint
   void reload() {
     setState(() {
-      _futureResultsByCountry = fetchResultsByCountry();
+      try {
+        _futureResultsByCountry = fetchResultsByCountry();
+      } catch (error) {
+        print('Error while fetching country data');
+      }
     });
   }
 
@@ -56,7 +60,7 @@ class _CountryBarChartState extends State<CountryBarChart> {
       List<ResultsByCountry> results =
           list.map((i) => ResultsByCountry.fromJson(i)).toList();
 
-      print(results.runtimeType); //returns List<Img>
+      //print(results.runtimeType); //returns List<Img>
       print(results[0].runtimeType); //returns Img
 
       return results;
@@ -80,7 +84,18 @@ class _CountryBarChartState extends State<CountryBarChart> {
         if (snapshot.hasData) {
           return getPieChart(snapshot.data);
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Center(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Could not fetch data (${snapshot.error}) retrying ..."),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              )
+            ],
+          ));
         }
 
         return Center(child: CircularProgressIndicator());

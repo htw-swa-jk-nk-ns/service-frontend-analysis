@@ -38,7 +38,11 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
     reload();
     Timer.periodic(Duration(milliseconds: FETCH_INTERFAL), (timer) {
       setState(() {
-        _futureResults = fetchResults();
+        try {
+          _futureResults = fetchResults();
+        } catch (error) {
+          print('Error while fetching data');
+        }
       });
     });
   }
@@ -82,7 +86,18 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
         if (snapshot.hasData) {
           return getBarChart(snapshot.data);
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Center(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Could not fetch data (${snapshot.error}) retrying ..."),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              )
+            ],
+          ));
         }
 
         return Center(child: CircularProgressIndicator());
