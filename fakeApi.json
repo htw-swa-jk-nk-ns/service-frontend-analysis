@@ -1,26 +1,5 @@
 {
-  "results": [
-    {
-      "id": 1,
-      "candidate": "Nicolas",
-      "totalVotes": 2424
-    },
-    {
-      "id": 2,
-      "candidate": "Peter",
-      "totalVotes": 4344
-    },
-    {
-      "id": 3,
-      "candidate": "Lisa",
-      "totalVotes": 1241
-    },
-    {
-      "id": 4,
-      "candidate": "Russ",
-      "totalVotes": 2222
-    }
-  ],
+  "results": [],
   "country": [
     {
       "id": 1,
