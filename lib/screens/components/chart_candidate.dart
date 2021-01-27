@@ -23,7 +23,7 @@ class _CandidateBarChartState extends State<CandidateBarChart> {
   @override
   void initState() {
     super.initState();
-    //setUpTimedFetch();
+    setUpTimedFetch();
     //reload();
   }
 
