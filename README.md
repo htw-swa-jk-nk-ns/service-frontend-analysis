@@ -1,6 +1,6 @@
 # Service-Frontend-Analysis
 
-A new Flutter project.
+a new Flutter project.
 
 ## Getting Started
 
