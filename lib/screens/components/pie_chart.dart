@@ -73,12 +73,12 @@ class DonutAutoLabelChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<ResultsByCountry, int>> _createResultsData(
+  static List<charts.Series<ResultsByCountry, String>> _createResultsData(
       List<ResultsByCountry> results) {
     return [
-      new charts.Series<ResultsByCountry, int>(
+      new charts.Series<ResultsByCountry, String>(
         id: 'Sales',
-        domainFn: (ResultsByCountry sales, _) => sales.totalVotes,
+        domainFn: (ResultsByCountry sales, _) => sales.country,
         measureFn: (ResultsByCountry sales, _) => sales.totalVotes,
         data: results,
         // Set a label accessor to control the text of the arc label.
